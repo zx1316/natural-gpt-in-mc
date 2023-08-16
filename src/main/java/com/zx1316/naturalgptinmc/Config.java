@@ -70,7 +70,6 @@ public class Config {
     public static double presencePenalty;
     public static double frequencyPenalty;
     public static List<? extends String> commandBlacklist;
-//    public static List<AiPreset> presets = new ArrayList<>();
     public static HashMap<String, String> presets = new HashMap<>();
     public static int permissionLevel;
 
@@ -94,7 +93,6 @@ public class Config {
             for (int i = 0, times = str.length(); i < times; i++) {
                 if (str.charAt(i) == '|') {
                     presets.put(str.substring(0, i), str.substring(i + 1));
-//                    presets.add(new AiPreset(str.substring(0, i), str.substring(i + 1)));
                     break;
                 }
             }
