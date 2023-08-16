@@ -1,12 +1,11 @@
 package com.zx1316.naturalgptinmc;
 
-import com.zx1316.naturalgptinmc.data.AiPreset;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Main.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -71,7 +70,7 @@ public class Config {
     public static double presencePenalty;
     public static double frequencyPenalty;
     public static List<? extends String> commandBlacklist;
-    public static List<AiPreset> presets = new ArrayList<>();
+    public static HashMap<String, String> presets = new HashMap<>();
     public static int permissionLevel;
 
     @SubscribeEvent
@@ -93,7 +92,7 @@ public class Config {
         for (String str : PRESETS.get()) {
             for (int i = 0, times = str.length(); i < times; i++) {
                 if (str.charAt(i) == '|') {
-                    presets.add(new AiPreset(str.substring(0, i), str.substring(i + 1)));
+                    presets.put(str.substring(0, i), str.substring(i + 1));
                     break;
                 }
             }

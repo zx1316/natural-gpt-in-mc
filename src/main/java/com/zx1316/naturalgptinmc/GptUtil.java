@@ -1,7 +1,6 @@
 package com.zx1316.naturalgptinmc;
 
 import com.google.gson.Gson;
-import com.zx1316.naturalgptinmc.data.AiPreset;
 import com.zx1316.naturalgptinmc.data.ChatCompletionRequest;
 import com.zx1316.naturalgptinmc.data.ChatCompletionResponse;
 import com.zx1316.naturalgptinmc.data.ChatMessage;
@@ -46,11 +45,8 @@ public class GptUtil {
         }
         String aiName = data.getCurrent();
         String setting = "";
-        for (AiPreset preset : Config.presets) {
-            if (preset.getName().equals(aiName)) {
-                setting = preset.getSetting();
-                break;
-            }
+        if (Config.presets.containsKey(aiName)) {
+            setting = Config.presets.get(aiName);
         }
         String system = String.format(SYSTEM_TEMPLATE, aiName, aiName, setting);
         int cnt = Main.ENCODING.countTokensOrdinary(system) + Main.ENCODING.countTokensOrdinary(aiName + ":");

@@ -1,6 +1,5 @@
 package com.zx1316.naturalgptinmc;
 
-import com.zx1316.naturalgptinmc.data.AiPreset;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -16,15 +15,15 @@ public class GptSavedData extends SavedData {
     private String current;
 
     public GptSavedData() {
-        for (AiPreset preset : Config.presets) {
-            aiData.put(preset.getName(), new LinkedList<>());
+        for (String str : Config.presets.keySet()) {
+            aiData.put(str, new LinkedList<>());
         }
-        current = Config.presets.get(0).getName();
+        current = Config.presets.keySet().iterator().next();
     }
 
     public GptSavedData(@NotNull CompoundTag root) {
-        for (AiPreset preset : Config.presets) {
-            aiData.put(preset.getName(), new LinkedList<>());
+        for (String str : Config.presets.keySet()) {
+            aiData.put(str, new LinkedList<>());
         }
         if (root.contains("History")) {
             CompoundTag compoundTag = (CompoundTag) root.get("History");
@@ -41,7 +40,7 @@ public class GptSavedData extends SavedData {
         if (root.contains("Current")) {
             current = root.getString("Current");
         } else {
-            current = Config.presets.get(0).getName();
+            current = Config.presets.keySet().iterator().next();
         }
     }
 

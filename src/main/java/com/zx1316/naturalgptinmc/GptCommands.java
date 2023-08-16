@@ -2,7 +2,6 @@ package com.zx1316.naturalgptinmc;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.zx1316.naturalgptinmc.data.AiPreset;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.MessageArgument;
@@ -19,7 +18,7 @@ public class GptCommands {
                                     CommandSourceStack commandSourceStack = p.getSource();
                                     if (GptUtil.isUsing) {
                                         commandSourceStack.sendFailure(new TextComponent("The AI is busy, please try again later."));
-                                        return 1;
+                                        return 0;
                                     }
                                     ServerPlayer serverPlayer = commandSourceStack.getPlayerOrException();
                                     MinecraftServer server = commandSourceStack.getServer();
@@ -28,7 +27,7 @@ public class GptCommands {
                                     String name = serverPlayer.getName().getString();
                                     GptUtil.sendMessageToEveryone(server, message, name + " to " + data.getCurrent());
                                     GptUtil.chat(serverPlayer, message, data);
-                                    return 0;
+                                    return 1;
                                 })))
                 .then(Commands.literal("info")
                         .executes(p -> {
@@ -36,9 +35,9 @@ public class GptCommands {
                             MinecraftServer server = commandSourceStack.getServer();
                             GptSavedData data = server.overworld().getDataStorage().computeIfAbsent(GptSavedData::new, GptSavedData::new, "naturalgptinmc_data");
                             StringBuilder sb = new StringBuilder("All characters:");
-                            for (AiPreset preset : Config.presets) {
-                                sb.append("\n").append(preset.getName());
-                                if (preset.getName().equals(data.getCurrent())) {
+                            for (String str : Config.presets.keySet()) {
+                                sb.append("\n").append(str);
+                                if (str.equals(data.getCurrent())) {
                                     sb.append(" (current)");
                                 }
                             }
@@ -50,11 +49,9 @@ public class GptCommands {
                                 .executes(p -> {
                                     String character = MessageArgument.getMessage(p, "character").getString();
                                     CommandSourceStack commandSourceStack = p.getSource();
-                                    for (AiPreset preset : Config.presets) {
-                                        if (preset.getName().equals(character)) {
-                                            commandSourceStack.sendSuccess(new TextComponent("Character setting: " + preset.getSetting()), true);
-                                            return 1;
-                                        }
+                                    if (Config.presets.containsKey(character)) {
+                                        commandSourceStack.sendSuccess(new TextComponent("Character setting: " + Config.presets.get(character)), true);
+                                        return 1;
                                     }
                                     commandSourceStack.sendFailure(new TextComponent("No such character."));
                                     return 0;
